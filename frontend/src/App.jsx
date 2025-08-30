@@ -18,7 +18,10 @@ const App = () => {
             <Route path="/" element={<QuickReport/>} />
 
             {/* Login Route */}
+            <ProtectedRoute  allowedRoles={["superadmin", "admin", "user"]}>
             <Route path="/login" element={<Login/>} />
+            </ProtectedRoute>
+
 
             {/* Super Admin Only */}
             <Route
