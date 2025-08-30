@@ -22,10 +22,10 @@ router.get("/requests/:orgId", async (req, res) => {
       location: {
         $near: {
           $geometry: org.location,
-          $maxDistance: 50000
+          $maxDistance: org.serviceRadiusKm ? org.serviceRadiusKm * 1000 : 50000 // use org radius if available
         }
       },
-      status: ["pending", "assigned"]
+      status: { $in: ["pending", "assigned"] }
     });
 
     res.json({ success: true, data: reports });

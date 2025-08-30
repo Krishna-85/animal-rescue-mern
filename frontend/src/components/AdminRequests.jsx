@@ -21,6 +21,7 @@ const AdminRequests = () => {
         `http://localhost:8000/api/admin/requests/${orgId}`
       );
       setRequests(res.data.data); // kyunki backend me { success, data } aa raha hai
+      console.log(res.data)
       setLoading(false);
     } catch (err) {
       console.error("Error fetching requests", err);
@@ -76,7 +77,7 @@ const AdminRequests = () => {
             >
               <div>
                 <img
-                  src={`http://localhost:8000${req.images[0]}`}
+                  src={req.images[0]}
                   alt="animal"
                   className="w-32 h-32 object-cover rounded-md mb-2"
                 />

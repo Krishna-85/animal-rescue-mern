@@ -1,17 +1,32 @@
-import multer from "multer";
-import path from "path";
-import fs from "fs";
-const dir = path.join(process.cwd(), "server", "src", "uploads");
-if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, dir),
-  filename: (req, file, cb) =>
-    cb(
-      null,
-      Date.now() +
-        "-" +
-        Math.round(Math.random() * 1e9) +
-        path.extname(file.originalname)
-    )
+import { v2 as cloudinary } from 'cloudinary';
+import fs from 'fs';
+
+cloudinary.config({
+  cloud_name: "dabkukfv7",
+  api_key: "586778495952315",
+  api_secret: "EzlBjsFYpe_76fvybedN9nUdeGU",
 });
-export const upload = multer({ storage });
+
+export const uploadFile = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    const filePath = req.file.path; // multer ke through file path
+    const result = await cloudinary.uploader.upload(filePath, {
+      folder: 'animal-rescue', // optional: folder in Cloudinary
+    });
+
+    // Upload ke baad local temp file delete kar do
+    fs.unlinkSync(filePath);
+
+    // Cloudinary URL ko request me attach kar do
+    req.fileUrl = result.secure_url;
+
+    next();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Upload failed', error });
+  }
+};

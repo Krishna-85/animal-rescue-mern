@@ -9,6 +9,7 @@ import reportRoutes from "./src/routes/report.routes.js";
 import rescueRequestRoutes from "./src/routes/rescueRequestRoutes.js";
 import adminRoutes from "./src/routes/adminRoutes.js";
 import AuthRoutes from "./src/routes/auth.js"
+import multer from 'multer';
 
 dotenv.config();
 connectDB();
@@ -22,6 +23,8 @@ const __dirname = path.dirname(__filename);
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+const storage = multer.diskStorage({});
+export const upload = multer({ storage });
 
 // ✅ Static uploads serve
 app.use("/uploads", express.static(path.join(__dirname,  "server",  "src", "uploads")));

@@ -22,49 +22,58 @@ export const createReport = async (req, res, next) => {
   try {
     console.log("📩 createReport API called with body:", req.body);
 
-    const { lat, lng, description, reporterName, reporterPhone, address } =
-      req.body;
+    // Convert lat/lng to numbers
+    const lat = parseFloat(req.body.lat);
+    const lng = parseFloat(req.body.lng);
+    const { description, reporterName, reporterPhone, address } = req.body;
 
     if (!lat || !lng) {
       return res.status(400).json({ message: "lat & lng required" });
     }
 
-    // 📸 images handling
-    const images = (req.files || []).map((f) => `/uploads/${f.filename}`);
+    // Image handling (Cloudinary URL)
+    const images = req.fileUrl ? [req.fileUrl] : [];
 
-    // 1️⃣ Report create
+    // 1️⃣ Create report
     const report = await Report.create({
       description,
       images,
       reporter: { name: reporterName, phone: reporterPhone },
       address,
-      location: toPoint(lat, lng),
+      location: toPoint(lat, lng), // toPoint should handle [lng, lat]
     });
 
-    // 2️⃣ Active orgs fetch
-    // const orgs = await Org.find({ isActive: true });
-  const orgs = await Org.find({
+    console.log("📌 Report saved:", report);
+
+    // 2️⃣ Fetch active orgs within 5 km radius
+    const orgs = await Org.find({
+      isActive: true,
       location: {
         $near: {
           $geometry: {
             type: "Point",
             coordinates: [lng, lat],
           },
-          $maxDistance: 5000, // 5 km radius
+          $maxDistance: 5000, // 5 km
         },
       },
     });
-    console.log("📍 Nearby orgs found:", orgs);
-    // 3️⃣ Distance check karke filter karo
+
+    console.log("📍 Nearby orgs found (raw):", orgs);
+
+    // 3️⃣ Filter orgs by their service radius
     const nearbyOrgs = orgs.filter((org) => {
       const [orgLng, orgLat] = org.location.coordinates;
       const distance = getDistanceFromLatLonInKm(lat, lng, orgLat, orgLng);
-      return distance <= org.serviceRadiusKm; // sirf wo orgs jinki radius me fall karte hai
+      return distance <= org.serviceRadiusKm;
     });
 
-    console.log("📍 Nearby orgs found:", nearbyOrgs.map(o => o.name));
+    console.log(
+      "📍 Nearby orgs filtered (within radius):",
+      nearbyOrgs.map((o) => o.name)
+    );
 
-    // 4️⃣ Email notification
+    // 4️⃣ Send email notifications
     for (const org of nearbyOrgs) {
       await sendEmail({
         to: org.email,
@@ -73,7 +82,9 @@ export const createReport = async (req, res, next) => {
 
 📌 Location: https://maps.google.com/?q=${lat},${lng}
 📝 Description: ${report.description || "—"}
-👤 Reporter: ${report.reporter?.name || "N/A"} (${report.reporter?.phone || "N/A"})
+👤 Reporter: ${report.reporter?.name || "N/A"} (${
+          report.reporter?.phone || "N/A"
+        })
 🏠 Address: ${report.address || "Not provided"}
 `,
       });
@@ -89,6 +100,7 @@ export const createReport = async (req, res, next) => {
     next(e);
   }
 };
+
 
 export const listReports = async (req, res, next) => {
   try {
