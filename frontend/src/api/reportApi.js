@@ -1,6 +1,5 @@
 // src/api/reportApi.js
 import axios from "axios";
-import dotenv from 'dotenv'
 
 
 const API = axios.create({
@@ -10,7 +9,7 @@ const API = axios.create({
 
 export const uploadQuickReport = async (formData) => {
   // formData is a FormData instance
-  const res = await API.post("http://localhost:8000/api/reports", formData, {
+  const res = await API.post("/reports", formData, {
     headers: { "Content-Type": "multipart/form-data" },
     timeout: 30000, // 30s
   });
