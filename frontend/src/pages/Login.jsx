@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API } from "../api/reportApi";
 
 const Login = () => {
   const { login } = useAuth();
@@ -18,8 +19,10 @@ const Login = () => {
     setError("");
     setLoading(true);
 
+    const API_BASE_URL = "https://animal-rescue-api.onrender.com/api";
     try {
-      const res = await axios.post("http://localhost:8000/api/auth/login", {
+      const res = await axios.post(API_BASE_URL+"/auth/login", {
+        method: "POST",
         email,
         password,
       });
