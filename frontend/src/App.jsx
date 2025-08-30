@@ -15,12 +15,13 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             {/* Public Route */}
+            <ProtectedRoute  allowedRoles={["superadmin", "admin", "user"]}>
             <Route path="/" element={<QuickReport/>} />
+            </ProtectedRoute>
 
             {/* Login Route */}
-            <ProtectedRoute  allowedRoles={["superadmin", "admin", "user"]}>
             <Route path="/login" element={<Login/>} />
-            </ProtectedRoute>
+            
 
 
             {/* Super Admin Only */}
