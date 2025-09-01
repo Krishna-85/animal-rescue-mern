@@ -27,13 +27,13 @@ const AuthPage = () => {
       let res;
       if (isLogin) {
         // 🔹 Login API
-        res = await axios.post(`${API_BASE_URL}/auth/login`, {
+        res = await axios.post(`https://animal-rescue-api.onrender.com/api/auth/login`, {
           email,
           password,
         });
       } else {
         // 🔹 Signup API (new user gets "user" role by default)
-        res = await axios.post(`${API_BASE_URL}/auth/signup`, {
+        res = await axios.post(`https://animal-rescue-api.onrender.com/api/auth/signup`, {
           name,
           email,
           password,
