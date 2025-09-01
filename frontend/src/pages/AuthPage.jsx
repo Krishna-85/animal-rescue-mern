@@ -23,45 +23,24 @@ const AuthPage = () => {
     setError("");
     setLoading(true);
 
-    try {
-      let res;
-      if (isLogin) {
-        // 🔹 Login API
-        res = await axios.post(`https://animal-rescue-api.onrender.com/api/auth/login`, {
-          email,
-          password,
-        });
-      } else {
-        // 🔹 Signup API (new user gets "user" role by default)
-        res = await axios.post(`https://animal-rescue-api.onrender.com/api/auth/signup`, {
-          name,
-          email,
-          password,
-        });
-      }
-
-      const { token, role, organization } = res.data;
-
-      if (organization?._id) {
-        localStorage.setItem("orgId", organization._id);
-      }
-
-      // Save user in context
-      login({ token, role, organization });
-
-      // 🔹 Redirect based on role
-      if (role === "superadmin") navigate("/add-org");
-      else if (role === "admin") navigate("/admin/dashboard");
-      else navigate("/quick-report"); // normal user → QuickReport page
-
-    } catch (err) {
-      console.error(err);
-      setError(
-        isLogin ? "Invalid email or password" : "Signup failed, try again"
-      );
-    } finally {
-      setLoading(false);
-    }
+  console.log("Submitting", email, password);
+try {
+  let res;
+  if (isLogin) {
+    console.log("Calling login API");
+    res = await axios.post(`${API_BASE_URL}/auth/login`, { email, password });
+    console.log("Login response:", res.data);
+  } else {
+    console.log("Calling signup API");
+    res = await axios.post(`${API_BASE_URL}/auth/signup`, { name, email, password });
+    console.log("Signup response:", res.data);
+  }
+} catch (err) {
+  console.error("API Error:", err.response || err.message);
+  setError(isLogin ? "Invalid email or password" : "Signup failed, try again");
+} finally {
+  setLoading(false);
+}
   };
 
   return (
