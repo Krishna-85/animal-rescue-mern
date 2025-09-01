@@ -3,10 +3,10 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import QuickReport from "./components/QuickReport";
 import { AuthProvider } from "./context/AuthContext";
-import AddOrg from "../src/components/AddOrg"
-import Login from "./pages/Login";
+import AddOrg from "../src/components/AddOrg";
 import AdminRequests from "./components/AdminRequests";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AuthPage from "./pages/AuthPage";
 
 const App = () => {
   return (
@@ -14,22 +14,26 @@ const App = () => {
       <div className="p-4">
         <BrowserRouter>
           <Routes>
-            {/* Public Route */}
-            
-            <Route path="/" element={<QuickReport/>} />
-           
-
             {/* Login Route */}
-            <Route path="/login" element={<Login/>} />
-            
+            <Route path="/" element={<AuthPage />} />
 
+            {/* Public Route */}
+
+            <Route
+              path="/quick-report"
+              element={
+                <ProtectedRoute path="/quick-report">
+                  <QuickReport />
+                </ProtectedRoute>
+              }
+            />
 
             {/* Super Admin Only */}
             <Route
               path="/add-org"
               element={
                 <ProtectedRoute allowedRoles={["superadmin"]}>
-                  <AddOrg/>
+                  <AddOrg />
                 </ProtectedRoute>
               }
             />

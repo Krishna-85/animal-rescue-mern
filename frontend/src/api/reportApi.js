@@ -3,7 +3,7 @@ import axios from "axios";
 
 
 export const API = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE || "https://animal-rescue-mern1.onrender.com/api",
+  baseURL: import.meta.env.VITE_API_BASE || "http://localhost:8000/api",
   // Add headers or interceptors here if needed (auth, etc.)
 });
 

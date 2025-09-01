@@ -21,7 +21,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(cors({
-  origin: ["https://animal-rescue-ui.onrender.com"], // frontend URL
+  origin: ["https://animal-rescue-ui.onrender.com","http://localhost:5173"], // frontend URL
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true, // agar cookies/auth use ho rahi ho
 }));
