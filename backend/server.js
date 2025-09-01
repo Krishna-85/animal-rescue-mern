@@ -1,8 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import path from "path";
-import { fileURLToPath } from "url";
+// import path from "path";
+// import { fileURLToPath } from "url";
 import connectDB from "./src/config/db.js";
 import orgRoutes from "./src/routes/org.routes.js";
 import reportRoutes from "./src/routes/report.routes.js";
@@ -17,8 +17,8 @@ connectDB();
 const app = express();
 
 // ✅ Fix __dirname for ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 
 app.use(cors({
   origin: ["https://animal-rescue-ui.onrender.com","http://localhost:5173"], // frontend URL
@@ -31,7 +31,7 @@ const storage = multer.diskStorage({});
 export const upload = multer({ storage });
 
 // ✅ Static uploads serve
-app.use("/uploads", express.static(path.join(__dirname,  "server",  "src", "uploads")));
+// app.use("/uploads", express.static(path.join(__dirname,  "server",  "src", "uploads")));
 
 app.use("/api/auth", AuthRoutes)
 app.use("/api/reports", reportRoutes);
