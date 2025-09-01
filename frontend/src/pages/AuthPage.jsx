@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 //  `https://animal-rescue-api.onrender.com/api `
 
-const API_BASE_URL = "http://localhost:8000/api"
+const API_BASE_URL = "https://animal-rescue-api.onrender.com/api"
 
 const AuthPage = () => {
   const { login } = useAuth();
