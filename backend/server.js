@@ -20,11 +20,7 @@ const app = express();
 // const __filename = fileURLToPath(import.meta.url);
 // const __dirname = path.dirname(__filename);
 
-app.use(cors({
-  origin: ["https://animal-rescue-ui.onrender.com","http://localhost:5173"], // frontend URL
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true, // agar cookies/auth use ho rahi ho
-}));
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const storage = multer.diskStorage({});
