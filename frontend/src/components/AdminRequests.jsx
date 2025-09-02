@@ -62,6 +62,7 @@ const AdminRequests = () => {
 
   return (
     <div className="p-6">
+      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"><a href="/quick-report">Quick Report</a></button>
       <h2 className="text-2xl font-semibold mb-4">🐄 Rescue Requests</h2>
 
       {loading ? (

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 //  `https://animal-rescue-api.onrender.com/api `
 
-const API_BASE_URL = "https://animal-rescue-api.onrender.com/api"
+const API_BASE_URL = "http://localhost:8000/api"
 
 const AuthPage = () => {
   const { login } = useAuth();
@@ -23,24 +23,46 @@ const AuthPage = () => {
     setError("");
     setLoading(true);
 
-  console.log("Submitting", email, password);
-try {
-  let res;
-  if (isLogin) {
-    console.log("Calling login API");
-    res = await axios.post(`${API_BASE_URL}/auth/login`, { email, password });
-    console.log("Login response:", res.data);
-  } else {
-    console.log("Calling signup API");
-    res = await axios.post(`${API_BASE_URL}/auth/signup`, { name, email, password });
-    console.log("Signup response:", res.data);
-  }
-} catch (err) {
-  console.error("API Error:", err.response || err.message);
-  setError(isLogin ? "Invalid email or password" : "Signup failed, try again");
-} finally {
-  setLoading(false);
-}
+    try {
+      let res;
+      if (isLogin) {
+        // 🔹 Login API
+        res = await axios.post(`${API_BASE_URL}/auth/login`, {
+          email,
+          password,
+        });
+      } else {
+        // 🔹 Signup API (new user gets "user" role by default)
+        res = await axios.post(`${API_BASE_URL}/auth/signup`, {
+          name,
+          email,
+          password,
+        });
+      }
+
+      const { token, role, organization } = res.data;
+
+      if (organization?._id) {
+        localStorage.setItem("orgId", organization._id);
+      }
+
+      // Save user in context
+      login({ token: res.data.token, role: res.data.role, organization: res.data.organization });
+localStorage.setItem("user", JSON.stringify(res.data));
+
+      // 🔹 Redirect based on role
+      if (role === "superadmin") navigate("/add-org");
+      else if (role === "admin") navigate("/admin/dashboard");
+      else navigate("/quick-report"); // normal user → QuickReport page
+
+    } catch (err) {
+      console.error(err);
+      setError(
+        isLogin ? "Invalid email or password" : "Signup failed, try again"
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

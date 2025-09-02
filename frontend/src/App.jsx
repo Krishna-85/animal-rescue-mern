@@ -22,7 +22,7 @@ const App = () => {
             <Route
               path="/quick-report"
               element={
-                <ProtectedRoute path="/quick-report">
+                <ProtectedRoute allowedRoles={["admin", "superadmin", "user"]}>
                   <QuickReport />
                 </ProtectedRoute>
               }

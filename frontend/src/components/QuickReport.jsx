@@ -108,7 +108,11 @@ export default function QuickReport() {
 
   return (
     <div className="max-w-md mx-auto bg-white p-4 rounded shadow">
-      <button><a href="/">Admin login</a></button>
+      <div className="flex items-center gap-3">
+
+      <button className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded "><a href="/">Admin login</a></button>
+      <button className="bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded"><a href="/admin/dashboard">Requests</a></button>
+      </div>
       <h2 className="text-xl font-semibold mb-3">Quick Report — Injured Animal</h2>
 
       {/* Upload button */}
